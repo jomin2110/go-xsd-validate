@@ -86,6 +86,27 @@ func TestXmlMemHandlerFail(t *testing.T) {
 	defer handler.Free()
 }
 
+func TestXmlMemHandlerLargeXml(t *testing.T) {
+	Init()
+	defer Cleanup()
+
+	xmlFilePass, err := os.Open("examples/huge_text_node.xml")
+	if err != nil {
+		fmt.Printf("Error: %s %s\n", t.Name(), err.Error())
+		return
+	}
+	defer xmlFilePass.Close()
+
+	inXml, _ := ioutil.ReadAll(xmlFilePass)
+
+	handler, err := NewXmlHandlerMem(inXml, ParsXmlHuge)
+	if err != nil {
+		fmt.Printf("Error: %s %s\n", t.Name(), err.Error())
+		t.Fail()
+	}
+	defer handler.Free()
+}
+
 func TestValidateWithXsdHandlerPass(t *testing.T) {
 	Init()
 	defer Cleanup()
